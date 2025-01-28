@@ -1,0 +1,56 @@
+def vigenere_encrypt(text, key):
+    encrypted_text = []
+    key = key.upper()
+    key_length = len(key)
+    key_index = 0
+
+    for char in text:
+        if char.isalpha():  # Encrypt only letters
+            shift = ord(key[key_index]) - ord('A')
+            if char.islower():
+                encrypted_text.append(chr((ord(char) - ord('a') + shift) % 26 + ord('a')))
+            else:
+                encrypted_text.append(chr((ord(char) - ord('A') + shift) % 26 + ord('A')))
+            key_index = (key_index + 1) % key_length
+        else:
+            encrypted_text.append(char)  # Leave non-alphabet characters unchanged
+
+    return ''.join(encrypted_text)
+
+
+def vigenere_decrypt(text, key):
+    decrypted_text = []
+    key = key.upper()
+    key_length = len(key)
+    key_index = 0
+
+    for char in text:
+        if char.isalpha():  # Decrypt only letters
+            shift = ord(key[key_index]) - ord('A')
+            if char.islower():
+                decrypted_text.append(chr((ord(char) - ord('a') - shift) % 26 + ord('a')))
+            else:
+                decrypted_text.append(chr((ord(char) - ord('A') - shift) % 26 + ord('A')))
+            key_index = (key_index + 1) % key_length
+        else:
+            decrypted_text.append(char)  # Leave non-alphabet characters unchanged
+
+    return ''.join(decrypted_text)
+
+
+# Example usage:
+plaintext = "Hello, World!"
+key = "KEY"
+encrypted = vigenere_encrypt(plaintext, key)
+decrypted = vigenere_decrypt(encrypted, key)
+
+print("Plaintext:", plaintext)
+print("Key:", key)
+print("Encrypted:", encrypted)
+print("Decrypted:", decrypted)
+
+//Output 
+Plaintext: Hello, World!
+Key: KEY
+Encrypted: Rijvs, Uyvjn!
+Decrypted: Hello, World!
