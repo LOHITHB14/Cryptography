@@ -1,0 +1,82 @@
+import random
+from sympy import isprime
+
+def generate_key(p, g):
+    """
+    Generate ElGamal public and private keys with selected e1, e2, r, and d.
+    p: A large prime number.
+    g: A primitive root of p.
+    Returns: (public_key, private_key)
+    """
+    # Select private key d (randomly between 1 and p-2)
+    d = random.randint(2, p-2)
+    
+    # Compute e1 = g^d mod p (public key component)
+    e1 = pow(g, d, p)
+    
+    # Public key = (p, g, e1)
+    # Private key = (d)
+    return (p, g, e1), d
+
+def encrypt(plaintext, public_key, r=None):
+    """
+    Encrypt the plaintext using ElGamal encryption with selected r, e1, e2.
+    plaintext: Integer message to encrypt.
+    public_key: (p, g, e1)
+    r: A random integer used for encryption (optional, will be generated if None).
+    Returns: Ciphertext as a tuple (e1, e2).
+    """
+    p, g, e1 = public_key
+    
+    # If r is not provided, generate a random r
+    if r is None:
+        r = random.randint(2, p-2)
+    
+    # Compute e2 = plaintext * e1^r mod p (public key encryption)
+    e2 = (plaintext * pow(e1, r, p)) % p
+    
+    # Compute e1 = g^r mod p (second part of the ciphertext)
+    e1_r = pow(g, r, p)
+    
+    return e1_r, e2
+
+def decrypt(ciphertext, private_key, p):
+    """
+    Decrypt the ciphertext using ElGamal decryption.
+    ciphertext: (e1_r, e2)
+    private_key: d
+    p: The prime number used in key generation.
+    Returns: Decrypted plaintext.
+    """
+    e1_r, e2 = ciphertext
+    d = private_key
+    
+    # Compute s = e1_r^d mod p
+    s = pow(e1_r, d, p)
+    
+    # Compute modular inverse of s (s^-1 mod p)
+    s_inv = pow(s, p-2, p)
+    
+    # Decrypt plaintext = e2 * s_inv mod p
+    plaintext = (e2 * s_inv) % p
+    return plaintext
+
+# Example usage
+p = 307  # Small prime number for illustration
+g = 2    # Primitive root (generator) of p
+
+# Generate public and private keys
+public_key, private_key = generate_key(p, g)
+
+# Example plaintext (an integer)
+plaintext = 123
+
+# Encrypt the plaintext
+r = random.randint(2, p-2)  # Random r
+ciphertext = encrypt(plaintext, public_key, r)
+
+# Decrypt the ciphertext
+decrypted_text = decrypt(ciphertext, private_key, p)
+
+# Output the results
+public_key, private_key, plaintext, ciphertext, decrypted_text
