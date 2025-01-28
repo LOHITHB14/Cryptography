@@ -81,3 +81,13 @@ decrypted_text = decrypt(ciphertext, private_key, p)
 
 # Output the results
 public_key, private_key, plaintext, ciphertext, decrypted_text
+
+//Output 
+// Enter a large prime number (p): 11
+// Enter primitive root modulo p (e1): 2
+// Enter private key (d): 3
+// Computed public key e2: 8
+// Enter random integer (r): 4
+// Enter plaintext (integer): 7
+// Encrypted values: c1 = 5, c2 = 6
+// Decrypted plaintext: 7
