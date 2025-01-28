@@ -1,0 +1,66 @@
+import random
+from sympy import isprime, randprime
+from math import gcd
+
+def generate_keys(bit_length=8):
+    """
+    Generate RSA keys (public and private).
+    - bit_length: Number of bits for prime numbers.
+    Returns: (public_key, private_key, n)
+    """
+    # Step 1: Generate two large prime numbers
+    p = randprime(2**(bit_length-1), 2**bit_length)
+    q = randprime(2**(bit_length-1), 2**bit_length)
+    
+    # Step 2: Compute n = p * q and φ(n) = (p - 1) * (q - 1)
+    n = p * q
+    phi_n = (p - 1) * (q - 1)
+    
+    # Step 3: Choose an encryption key 'e' such that 1 < e < φ(n) and gcd(e, φ(n)) = 1
+    e = random.choice([i for i in range(3, phi_n) if gcd(i, phi_n) == 1])
+    
+    # Step 4: Compute the decryption key 'd' such that (d * e) ≡ 1 (mod φ(n))
+    _, d, _ = extended_euclidean(e, phi_n)
+    d = d % phi_n
+    if d < 0:  # Ensure d is positive
+        d += phi_n
+    
+    # Public key = (e, n), Private key = (d, n)
+    return (e, n), (d, n)
+
+
+def encrypt(plaintext, public_key):
+    """
+    Encrypt a plaintext using the public key.
+    - plaintext: Text to encrypt (as an integer or string).
+    - public_key: (e, n)
+    Returns: Encrypted ciphertext as an integer.
+    """
+    e, n = public_key
+    if isinstance(plaintext, str):
+        plaintext = int.from_bytes(plaintext.encode(), 'big')
+    return pow(plaintext, e, n)
+
+
+def decrypt(ciphertext, private_key):
+    """
+    Decrypt a ciphertext using the private key.
+    - ciphertext: Encrypted integer.
+    - private_key: (d, n)
+    Returns: Decrypted plaintext as a string.
+    """
+    d, n = private_key
+    plaintext = pow(ciphertext, d, n)
+    return plaintext.to_bytes((plaintext.bit_length() + 7) // 8, 'big').decode()
+
+
+# Example Usage
+public_key, private_key = generate_keys(bit_length=8)
+plaintext = "HELLO"
+
+# Encrypt and Decrypt
+ciphertext = encrypt(plaintext, public_key)
+decrypted_text = decrypt(ciphertext, private_key)
+
+# Output Results
+(public_key, private_key, plaintext, ciphertext, decrypted_text)
