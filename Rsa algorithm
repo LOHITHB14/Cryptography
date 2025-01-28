@@ -65,3 +65,12 @@ decrypted_text = decrypt(ciphertext, private_key)
 
 # Output Results
 (public_key, private_key, plaintext, ciphertext, decrypted_text)
+
+//Output
+// Generated Prime p: 32429
+// Generated Prime q: 21799
+// Public Key: (e = 31513, n = 706919771)
+// Private Key: (d = 407435209, n = 706919771)
+// Enter a message to encrypt: SHEISLISTENING
+// Encrypted message: 525283347 534686148 392983059 240060037 525283347 602634667 240060037 525283347 388817816 392983059 6831066 240060037 6831066 385034831
+// Decrypted message: SHEISLISTENING
