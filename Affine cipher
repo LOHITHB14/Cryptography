@@ -55,3 +55,10 @@ if __name__ == "__main__":
     # Decryption
     decrypted = affine_decrypt(encrypted, a, b, m)
     print(f"Decrypted Text: {decrypted}")
+
+
+//Output 
+Plaintext: HELLO AFFINE CIPHER
+Keys: a = 7, b = 3
+Encrypted Text: UTYYD DCCKQ TJKUTW
+Decrypted Text: HELLO AFFINE CIPHER
